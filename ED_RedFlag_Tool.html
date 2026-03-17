@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ED Red Flags">
+<meta name="theme-color" content="#C0392B">
+<title>ED Red Flag Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --red: #C0392B;
+    --red-dark: #96281B;
+    --red-light: #FDECEA;
+    --red-mid: #E57373;
+    --amber: #E67E22;
+    --amber-light: #FEF3E2;
+    --green: #1A7F5A;
+    --green-light: #E8F8F1;
+    --ink: #1a1a1a;
+    --ink2: #5a5a5a;
+    --surface: #ffffff;
+    --surface2: #f5f5f5;
+    --border: rgba(0,0,0,0.1);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --red: #E05545;
+      --red-dark: #C0392B;
+      --red-light: #2d1a18;
+      --red-mid: #c0392b;
+      --amber: #F0A030;
+      --amber-light: #2a1f0e;
+      --green: #2ECC8A;
+      --green-light: #0e2a1e;
+      --ink: #f0f0f0;
+      --ink2: #a0a0a0;
+      --surface: #1c1c1e;
+      --surface2: #2c2c2e;
+      --border: rgba(255,255,255,0.1);
+    }
+  }
+
+  html, body {
+    height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+    background: var(--surface2);
+    color: var(--ink);
+    overflow: hidden;
+  }
+
+  /* APP SHELL */
+  .app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: -webkit-fill-available;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--red);
+    color: #fff;
+    padding: env(safe-area-inset-top, 12px) 16px 12px;
+    padding-top: calc(env(safe-area-inset-top, 12px) + 12px);
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .header-icon {
+    width: 36px;
+    height: 36px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .header h1 {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    line-height: 1.2;
+  }
+
+  .header p {
+    font-size: 11px;
+    opacity: 0.8;
+    margin-top: 1px;
+  }
+
+  .disclaimer-badge {
+    margin-left: auto;
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 12px;
+    padding: 3px 8px;
+    font-size: 10px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* SEARCH */
+  .search-wrap {
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.12);
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 8px 14px 8px 36px;
+    border-radius: 10px;
+    border: none;
+    background: rgba(255,255,255,0.9);
+    color: #1a1a1a;
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+    appearance: none;
+    position: relative;
+  }
+
+  .search-input::placeholder { color: #888; }
+
+  .search-container {
+    position: relative;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px;
+    color: #888;
+    pointer-events: none;
+  }
+
+  /* CATEGORY PILLS */
+  .pills-wrap {
+    padding: 6px 12px 8px;
+    background: rgba(255,255,255,0.08);
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    flex-shrink: 0;
+  }
+
+  .pills-wrap::-webkit-scrollbar { display: none; }
+
+  .pill {
+    padding: 5px 12px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.35);
+    font-size: 12px;
+    white-space: nowrap;
+    cursor: pointer;
+    background: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.9);
+    font-family: inherit;
+    font-weight: 500;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+
+  .pill.active {
+    background: #fff;
+    color: var(--red);
+    border-color: #fff;
+  }
+
+  /* MAIN CONTENT */
+  .main {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* LIST VIEW */
+  .list-view {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 8px 12px;
+    display: none;
+  }
+
+  .list-view.visible { display: block; }
+
+  .list-item {
+    background: var(--surface);
+    border-radius: 12px;
+    margin-bottom: 8px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    border: 0.5px solid var(--border);
+    transition: background 0.1s;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .list-item:active { background: var(--red-light); }
+
+  .list-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--red-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .list-text { flex: 1; }
+
+  .list-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+
+  .list-cat {
+    font-size: 12px;
+    color: var(--ink2);
+    margin-top: 2px;
+  }
+
+  .list-count {
+    font-size: 12px;
+    color: var(--red);
+    font-weight: 600;
+    background: var(--red-light);
+    padding: 3px 8px;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+
+  .list-chevron {
+    color: var(--ink2);
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  /* DETAIL VIEW */
+  .detail-view {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    display: none;
+    flex-direction: column;
+  }
+
+  .detail-view.visible { display: flex; }
+
+  .detail-top-bar {
+    background: var(--surface);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .back-btn {
+    background: var(--red-light);
+    border: none;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 14px;
+    color: var(--red);
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .back-btn:active { opacity: 0.7; }
+
+  .detail-header-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .detail-content {
+    padding: 14px 14px;
+    padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 16px);
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+
+  .stat-chip {
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .stat-chip.red { background: var(--red-light); color: var(--red); }
+  .stat-chip.amber { background: var(--amber-light); color: var(--amber); }
+  .stat-chip.green { background: var(--green-light); color: var(--green); }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--ink2);
+    margin: 14px 0 8px;
+    padding-bottom: 6px;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .red-flag-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 10px 12px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+    background: var(--red-light);
+    border-left: 3px solid var(--red-mid);
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
+  .dot.red { background: var(--red); }
+  .dot.amber { background: var(--amber); }
+
+  .rf-text { font-size: 14px; color: var(--ink); line-height: 1.5; }
+  .rf-bold { font-weight: 600; }
+  .rf-note { color: var(--red); font-size: 12px; display: block; margin-top: 2px; }
+
+  .warn-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 10px 12px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+    background: var(--amber-light);
+    border-left: 3px solid #F0AC55;
+  }
+
+  .action-box {
+    background: var(--green-light);
+    border: 0.5px solid #82C9A8;
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    font-size: 14px;
+    color: var(--green);
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    line-height: 1.4;
+  }
+
+  .action-check { font-weight: 700; flex-shrink: 0; }
+
+  .disclaimer-box {
+    margin-top: 16px;
+    padding: 10px 14px;
+    background: var(--surface2);
+    border-radius: 10px;
+    border: 0.5px solid var(--border);
+    font-size: 12px;
+    color: var(--ink2);
+    line-height: 1.6;
+  }
+
+  .no-results {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--ink2);
+    font-size: 15px;
+  }
+
+  .empty-icon { font-size: 40px; display: block; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <div class="header-icon">🏥</div>
+      <div style="flex:1">
+        <h1>ED / Urgent Care Red Flags</h1>
+        <p>Clinical decision support reference</p>
+      </div>
+      <div class="disclaimer-badge">Reference only</div>
+    </div>
+    <div class="search-wrap">
+      <div class="search-container">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" type="text" id="searchInput" placeholder="Search complaints or symptoms…" oninput="filterAll()" autocomplete="off" autocorrect="off" spellcheck="false">
+      </div>
+    </div>
+    <div class="pills-wrap" id="pillsWrap"></div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="list-view visible" id="listView"></div>
+    <div class="detail-view" id="detailView"></div>
+  </div>
+
+</div>
+
+<script>
+const DATA = [
+  {
+    id:1, complaint:"Chest Pain", icon:"❤️", category:"Cardiovascular",
+    redFlags:[
+      {text:"Diaphoresis with chest pain", note:"Classic ACS presentation"},
+      {text:"Radiation to left arm, jaw, or back"},
+      {text:"Pressure/squeezing quality", note:"High STEMI/NSTEMI suspicion"},
+      {text:"Syncope or pre-syncope with chest pain"},
+      {text:"Sudden tearing/ripping pain radiating to back", note:"Aortic dissection until proven otherwise"},
+      {text:"New onset at rest or minimal exertion"},
+      {text:"Associated dyspnea, nausea, or vomiting"},
+      {text:"Hypotension or shock"},
+      {text:"Pleuritic pain with dyspnea + risk factors for DVT", note:"Pulmonary embolism"},
+      {text:"Signs of tamponade: JVD, muffled heart sounds, hypotension (Beck's triad)"},
+      {text:"Unequal blood pressures in both arms", note:"Aortic dissection flag"},
+    ],
+    caution:[
+      "Atypical presentations in women, diabetics, elderly",
+      "Cocaine use — vasospasm / ACS risk",
+      "Recent viral illness + young patient — myocarditis",
+    ],
+    actions:[
+      "12-lead ECG within 10 min of arrival",
+      "Troponin I/T (serial at 0 and 3h)",
+      "CXR to evaluate mediastinum",
+      "Aspirin 324 mg if ACS suspected and no contraindication",
+    ]
+  },
+  {
+    id:2, complaint:"Headache", icon:"🧠", category:"Neurological",
+    redFlags:[
+      {text:"Thunderclap headache — worst headache of life", note:"Subarachnoid hemorrhage until proven otherwise"},
+      {text:"Headache on exertion, Valsalva, or orgasm"},
+      {text:"New headache in age >50", note:"Giant cell arteritis, malignancy"},
+      {text:"Fever + nuchal rigidity ± petechiae", note:"Bacterial meningitis / meningococcemia"},
+      {text:"Focal neurological deficits"},
+      {text:"Papilledema on fundoscopy"},
+      {text:"Altered mental status or personality change"},
+      {text:"Headache with positional worsening (worse lying flat)", note:"Elevated ICP"},
+      {text:"Immunocompromised + new headache", note:"Cryptococcal / opportunistic infections"},
+      {text:"Recent head trauma with progressive headache", note:"Epidural or subdural hematoma"},
+      {text:"Unilateral temporal pain + jaw claudication", note:"Giant cell arteritis"},
+    ],
+    caution:[
+      "New or 'different' headache from prior pattern",
+      "Headache waking from sleep",
+      "Meningismus may be absent early in meningitis",
+    ],
+    actions:[
+      "Non-contrast CT head — rule out hemorrhage/mass",
+      "LP if CT negative and SAH suspected (xanthochromia)",
+      "ESR/CRP if GCA suspected — ophthalmology urgently",
+      "Blood cultures before antibiotics if meningitis suspected",
+    ]
+  },
+  {
+    id:3, complaint:"Dyspnea", icon:"🫁", category:"Respiratory",
+    redFlags:[
+      {text:"SpO2 <94% on room air"},
+      {text:"Accessory muscle use / tripod positioning"},
+      {text:"Cyanosis — central or peripheral"},
+      {text:"Silent chest (absent wheeze in asthma)", note:"Respiratory failure imminent"},
+      {text:"Stridor or inspiratory wheeze", note:"Upper airway obstruction"},
+      {text:"Sudden onset with pleuritic pain ± risk factors", note:"Pulmonary embolism"},
+      {text:"Unilateral absent breath sounds with hypotension", note:"Tension pneumothorax"},
+      {text:"Frothy pink sputum", note:"Acute pulmonary edema"},
+      {text:"Peak flow <50% predicted or unable to complete sentences"},
+      {text:"Paradoxical abdominal movement"},
+      {text:"Hemoptysis with dyspnea"},
+    ],
+    caution:[
+      "Elderly patients may not appear acutely distressed despite critical hypoxia",
+      "Anemia can present as dyspnea",
+      "CO poisoning — normal SpO2 reading, cherry-red skin",
+    ],
+    actions:[
+      "O2 titrated to SpO2 94-98% (88-92% if COPD)",
+      "CXR, ECG, D-dimer/CTPA if PE suspected",
+      "BNP/pro-BNP for CHF evaluation",
+      "ABG if severe or impending respiratory failure",
+    ]
+  },
+  {
+    id:4, complaint:"Abdominal Pain", icon:"🫀", category:"GI / Surgical",
+    redFlags:[
+      {text:"Sudden onset severe 'tearing' pain radiating to back", note:"AAA or aortic dissection"},
+      {text:"Rigid, board-like abdomen", note:"Peritonitis — surgical emergency"},
+      {text:"Pain out of proportion to exam findings", note:"Mesenteric ischemia"},
+      {text:"Hemodynamic instability with abdominal pain"},
+      {text:"Guarding and rebound tenderness"},
+      {text:"Absent bowel sounds with distension", note:"Obstruction / ileus"},
+      {text:"Pulsatile abdominal mass"},
+      {text:"Bloody diarrhea or melena"},
+      {text:"Pelvic pain + missed period in reproductive-age female", note:"Ectopic pregnancy"},
+      {text:"Jaundice + fever + RUQ pain (Charcot's triad)", note:"Ascending cholangitis"},
+      {text:"Tenderness in immunocompromised patient", note:"Atypical presentations common"},
+    ],
+    caution:[
+      "AAA may present as 'back pain' or 'kidney stone'",
+      "Ectopic pregnancy in any reproductive-age woman",
+      "Elderly patients may not develop peritoneal signs",
+    ],
+    actions:[
+      "Immediate IV access + fluid resuscitation if unstable",
+      "β-hCG in all reproductive-age women",
+      "FAST exam or CT abdomen/pelvis with contrast",
+      "Surgical consult early for peritoneal signs",
+    ]
+  },
+  {
+    id:5, complaint:"Altered Mental Status", icon:"🧬", category:"Neurological",
+    redFlags:[
+      {text:"Acute onset confusion — always a red flag", note:"Broad differential, all urgent"},
+      {text:"Fever + AMS ± neck stiffness", note:"Meningitis / encephalitis"},
+      {text:"Focal neurological deficits", note:"Stroke / hemorrhage"},
+      {text:"Hypoglycemia or hyperglycemia"},
+      {text:"Ingestion or polypharmacy in elderly"},
+      {text:"Urinary retention or incontinence in new AMS"},
+      {text:"Prolonged post-ictal or repeated seizures without recovery"},
+      {text:"Bradycardia + hypertension + irregular breathing (Cushing's triad)", note:"Elevated ICP"},
+      {text:"Pinpoint pupils + respiratory depression", note:"Opioid toxidrome"},
+      {text:"Hyperthermia + rigidity + clonus", note:"Serotonin syndrome / NMS"},
+      {text:"Elderly patient — always consider PE, MI, sepsis"},
+    ],
+    caution:[
+      "Thyroid storm and Addisonian crisis may present as AMS",
+      "Always check glucose before advanced workup",
+      "Elderly + UTI may present with delirium only",
+    ],
+    actions:[
+      "Fingerstick glucose immediately",
+      "Consider empirical thiamine 100mg IV (before dextrose)",
+      "CT head non-contrast; LP if meningitis suspected",
+      "Toxicology screen, ammonia, TSH, metabolic panel",
+    ]
+  },
+  {
+    id:6, complaint:"Back Pain", icon:"🦴", category:"Musculoskeletal",
+    redFlags:[
+      {text:"Saddle anesthesia ± bowel/bladder dysfunction", note:"Cauda equina syndrome — surgical emergency"},
+      {text:"Progressive bilateral leg weakness"},
+      {text:"New back pain + fever + IV drug use", note:"Epidural abscess"},
+      {text:"Night pain or rest pain unrelieved by position"},
+      {text:"Weight loss + older age", note:"Malignancy"},
+      {text:"Pulsatile mass in elderly + back pain + hypotension", note:"AAA"},
+      {text:"Back pain + urinary retention"},
+      {text:"New back pain in known malignancy", note:"Cord compression"},
+      {text:"Immunocompromised + back pain + fever"},
+      {text:"Recent trauma with back pain"},
+    ],
+    caution:[
+      "Cauda equina — any doubt, MRI immediately",
+      "Do not attribute back pain to MSK without excluding vascular cause",
+      "Osteoporosis + minor trauma = compression fracture",
+    ],
+    actions:[
+      "Neurological exam including perianal sensation",
+      "Urgent MRI spine if cauda equina suspected",
+      "Abdominal US to exclude AAA if vascular risk",
+      "Straight leg raise test; check reflexes and power",
+    ]
+  },
+  {
+    id:7, complaint:"Fever", icon:"🌡️", category:"Infectious",
+    redFlags:[
+      {text:"Petechial / purpuric rash + fever", note:"Meningococcemia — sepsis protocol immediately"},
+      {text:"Fever in immunocompromised patient", note:"Neutropenic sepsis protocol"},
+      {text:"Temperature >40°C or <36°C with organ dysfunction", note:"Sepsis"},
+      {text:"Fever + AMS"},
+      {text:"Fever + rash + arthralgias + travel history", note:"Malaria, dengue, rickettsial"},
+      {text:"Fever + rigors + hypotension"},
+      {text:"Toxic appearance / mottling / poor perfusion"},
+      {text:"Fever in returned traveler from endemic region"},
+      {text:"Fever post-splenectomy", note:"OPSI — cephalosporin stat"},
+      {text:"Neonatal fever (<28 days old)"},
+    ],
+    caution:[
+      "Elderly patients may not mount a fever in sepsis",
+      "Immunosuppressed — fever may be blunted",
+      "Infants <3 months — any fever is an emergency",
+    ],
+    actions:[
+      "Blood cultures x2 before antibiotics",
+      "Lactate, CBC, metabolic panel, UA",
+      "Broad-spectrum antibiotics within 1 hour if sepsis",
+      "30ml/kg IV crystalloid bolus if hypotensive",
+    ]
+  },
+  {
+    id:8, complaint:"Stroke Symptoms", icon:"⚡", category:"Neurological",
+    redFlags:[
+      {text:"Sudden unilateral facial droop"},
+      {text:"Arm or leg weakness — sudden onset"},
+      {text:"Sudden slurred speech or aphasia"},
+      {text:"Sudden vision loss or double vision"},
+      {text:"Sudden severe headache", note:"May indicate hemorrhagic stroke"},
+      {text:"Ataxia, dizziness, loss of balance", note:"Posterior circulation"},
+      {text:"Nausea/vomiting with any neurological symptom", note:"Posterior fossa stroke"},
+      {text:"Symptoms within 4.5-hour window", note:"tPA eligibility window"},
+      {text:"Wake-up stroke — unknown time of onset"},
+    ],
+    caution:[
+      "BE-FAST: Balance, Eyes, Face, Arm, Speech, Time",
+      "Posterior strokes easily missed — dizziness alone can be stroke",
+      "Young patients — consider dissection, PFO, hypercoagulable state",
+    ],
+    actions:[
+      "Activate stroke code immediately",
+      "Non-contrast CT head — exclude hemorrhage",
+      "MRI-DWI if CT negative and high suspicion",
+      "Last known well time — essential for tPA/thrombectomy eligibility",
+    ]
+  },
+  {
+    id:9, complaint:"Syncope", icon:"🔄", category:"Cardiovascular",
+    redFlags:[
+      {text:"Syncope during exertion", note:"HCM, AS, ARVC"},
+      {text:"Preceded by palpitations or chest pain"},
+      {text:"Family history of sudden cardiac death"},
+      {text:"New ECG abnormality (prolonged QT, WPW, LBBB, Brugada)"},
+      {text:"Syncope + focal neurological deficit"},
+      {text:"Syncope + abdominal pain in elderly", note:"AAA"},
+      {text:"Recurrent unexplained syncope"},
+      {text:"Syncope without prodrome"},
+      {text:"Syncope in known structural heart disease"},
+    ],
+    caution:[
+      "Vagal syncope is diagnosis of exclusion",
+      "PE can present as syncope",
+      "Check prolonged QTc before discharge",
+    ],
+    actions:[
+      "12-lead ECG — mandatory",
+      "Orthostatic vitals",
+      "ROSE rule / SF Syncope Rule to risk stratify",
+      "Echo if structural disease suspected",
+    ]
+  },
+  {
+    id:10, complaint:"Leg Pain / Swelling", icon:"🦵", category:"Vascular",
+    redFlags:[
+      {text:"6 Ps: Pain, Pallor, Pulselessness, Paraesthesia, Paralysis, Cold", note:"Acute limb ischemia — vascular emergency"},
+      {text:"Asymmetric swelling + immobility/surgery/travel", note:"DVT / PE risk"},
+      {text:"Calf tenderness + dyspnea", note:"DVT + PE until proven otherwise"},
+      {text:"Hard, tense compartment — pain with passive stretch", note:"Compartment syndrome"},
+      {text:"Limb that is cold, white, or mottled"},
+      {text:"Rapidly spreading erythema + fever + crepitus", note:"Necrotizing fasciitis"},
+      {text:"Tender swelling post trauma with tight compartment"},
+    ],
+    caution:[
+      "Compartment syndrome — clinical diagnosis, do not wait for pressures if high suspicion",
+      "Necrotizing fasciitis may look benign early",
+      "Arterial insufficiency vs DVT — differentiate early",
+    ],
+    actions:[
+      "Doppler US for DVT",
+      "Ankle-brachial index / Doppler for arterial",
+      "Compartment pressures if syndrome suspected",
+      "Urgent vascular surgery for acute limb ischemia",
+    ]
+  },
+  {
+    id:11, complaint:"Sore Throat", icon:"👄", category:"ENT",
+    redFlags:[
+      {text:"Uvular deviation + unilateral peritonsillar bulge", note:"Peritonsillar abscess"},
+      {text:"Drooling, dysphagia, voice change, stridor", note:"Epiglottitis — do not examine throat"},
+      {text:"Trismus (inability to open mouth)"},
+      {text:"Neck rigidity or stiffness with sore throat"},
+      {text:"Muffled 'hot potato' voice"},
+      {text:"Significant neck swelling / submandibular induration", note:"Ludwig's angina"},
+      {text:"Stridor or respiratory distress"},
+    ],
+    caution:[
+      "Epiglottitis in adults — may not appear as sick as children",
+      "Ludwig's angina — airway management priority",
+      "Retropharyngeal abscess may only show neck stiffness",
+    ],
+    actions:[
+      "Airway assessment is the priority — have RSI ready",
+      "Lateral neck X-ray / CT neck with contrast",
+      "ENT consultation for peritonsillar abscess",
+      "IV antibiotics for deep space infections",
+    ]
+  },
+  {
+    id:12, complaint:"Eye Pain / Vision", icon:"👁️", category:"Ophthalmology",
+    redFlags:[
+      {text:"Sudden painless vision loss", note:"Central retinal artery occlusion — 90-min window"},
+      {text:"Halos around lights + headache + nausea", note:"Acute angle-closure glaucoma"},
+      {text:"Chemical splash to eye", note:"Irrigate immediately — then assess"},
+      {text:"Penetrating eye trauma"},
+      {text:"Fixed mid-dilated pupil + rock-hard globe"},
+      {text:"Hypopyon (pus in anterior chamber)"},
+      {text:"Hyphema (blood in anterior chamber)"},
+      {text:"Severe photophobia + ciliary injection + decreased vision", note:"Uveitis / iritis"},
+      {text:"Proptosis + pain with eye movement + fever", note:"Orbital cellulitis"},
+      {text:"Temporal headache + visual disturbance in >50yo", note:"Giant cell arteritis"},
+    ],
+    caution:[
+      "CRAO is an ocular stroke — time critical",
+      "Do not delay irrigation in chemical injury",
+      "Orbital vs preseptal cellulitis — CT orbits to differentiate",
+    ],
+    actions:[
+      "Visual acuity — document baseline",
+      "Tonometry for IOP in glaucoma suspect",
+      "Urgent ophthalmology for CRAO, acute glaucoma, globe rupture",
+      "CT orbits for proptosis / orbital involvement",
+    ]
+  },
+  {
+    id:13, complaint:"Palpitations", icon:"💓", category:"Cardiovascular",
+    redFlags:[
+      {text:"Palpitations + syncope or pre-syncope"},
+      {text:"Hemodynamic instability during palpitations"},
+      {text:"Palpitations + chest pain or dyspnea"},
+      {text:"Palpitations in known structural heart disease"},
+      {text:"HR >150 or <40 bpm at presentation"},
+      {text:"Wide complex tachycardia on ECG", note:"VT until proven otherwise"},
+      {text:"Irregular irregularity + rapid rate", note:"AF with RVR + instability"},
+      {text:"Prolonged QTc (>500ms) ± family history of sudden death"},
+      {text:"WPW pattern on ECG + any AF", note:"Avoid AV nodal blockers"},
+    ],
+    caution:[
+      "WPW + AF — avoid adenosine, diltiazem, digoxin",
+      "Electrolyte abnormalities (K+, Mg2+) can trigger arrhythmias",
+      "Thyrotoxicosis can cause AF and tachycardia",
+    ],
+    actions:[
+      "12-lead ECG during symptoms if possible",
+      "Electrolytes, Mg2+, TSH",
+      "Continuous cardiac monitoring",
+      "Cardioversion if unstable arrhythmia",
+    ]
+  },
+  {
+    id:14, complaint:"Flank / Urology Pain", icon:"🫘", category:"Urological",
+    redFlags:[
+      {text:"Flank pain + fever + CVA tenderness", note:"Pyelonephritis / sepsis"},
+      {text:"Flank pain + hypotension in older patient", note:"AAA — do not assume renal colic"},
+      {text:"Anuria with bilateral flank pain"},
+      {text:"Flank pain + gross hematuria in >45yo", note:"Malignancy"},
+      {text:"Known stone + new fever — obstruction + infection = emergency"},
+      {text:"Scrotal pain + absent cremasteric reflex", note:"Testicular torsion — 6hr window"},
+      {text:"Urinary retention with lower abdominal distension"},
+    ],
+    caution:[
+      "Testicular torsion — do NOT wait for USS if high suspicion; OR immediately",
+      "AAA misdiagnosed as renal colic in at-risk patients",
+      "Infected obstructing stone requires urgent urology",
+    ],
+    actions:[
+      "UA + urine culture + blood cultures if febrile",
+      "Scrotal US Doppler for torsion (do not delay surgery)",
+      "CT KUB for stone; CT abdomen if AAA suspected",
+      "Urology consult for obstructing stone + infection",
+    ]
+  },
+  {
+    id:15, complaint:"OB / Gynecological", icon:"🤰", category:"Obstetrics",
+    redFlags:[
+      {text:"Positive β-hCG + pelvic pain ± shoulder tip pain", note:"Ectopic pregnancy"},
+      {text:"Vaginal bleeding in early pregnancy + hemodynamic instability"},
+      {text:"Hypertension + proteinuria + headache/visual changes", note:"Pre-eclampsia / eclampsia"},
+      {text:"New onset seizure in pregnant patient", note:"Eclampsia"},
+      {text:"Productive discharge + fever + lower abdominal pain", note:"Tubo-ovarian abscess"},
+      {text:"Sudden severe pelvic pain", note:"Ovarian torsion"},
+      {text:"Third trimester bleeding", note:"Placenta previa / abruption"},
+      {text:"Decreased fetal movement in third trimester"},
+    ],
+    caution:[
+      "Ectopic — β-hCG in any reproductive-age woman with abdominal pain",
+      "Ovarian torsion may have intermittent severe pain",
+      "Perimortem C-section if maternal arrest >20 weeks",
+    ],
+    actions:[
+      "β-hCG (quantitative) in all reproductive-age women",
+      "Pelvic USS transvaginal for ectopic",
+      "BP management + MgSO4 for eclampsia",
+      "OB/Gyn emergency consultation",
+    ]
+  },
+  {
+    id:16, complaint:"Pediatric / Sick Child", icon:"👶", category:"Pediatric",
+    redFlags:[
+      {text:"Any fever in neonate <28 days old", note:"Full septic workup"},
+      {text:"Non-blanching petechial rash + fever", note:"Meningococcemia"},
+      {text:"High-pitched cry + bulging fontanelle"},
+      {text:"Paradoxical irritability", note:"More upset when comforted = meningitis"},
+      {text:"Respiratory distress with stridor in child", note:"Croup vs epiglottitis vs foreign body"},
+      {text:"Drooling + tripod positioning + fever", note:"Epiglottitis — do not examine throat"},
+      {text:"Toxic appearance — mottled, poor perfusion, altered tone"},
+      {text:"Prolonged seizure or focal seizure"},
+      {text:"Child <3 months with any fever ≥38°C"},
+    ],
+    caution:[
+      "Young infants may show only lethargy or poor feeding",
+      "Febrile seizures — rule out meningitis if atypical or prolonged",
+      "Kawasaki: fever >5 days + rash, conjunctivitis, strawberry tongue",
+    ],
+    actions:[
+      "PEWS score — Pediatric Early Warning Score",
+      "Blood cultures, CBC, CRP, UA, CXR",
+      "LP if meningitis suspected",
+      "Broad antibiotics + fluid resuscitation in sepsis",
+    ]
+  },
+];
+
+const CATEGORIES = [...new Set(DATA.map(d => d.category))];
+let activeCategory = null;
+let searchTerm = '';
+
+function filterAll() {
+  searchTerm = document.getElementById('searchInput').value.toLowerCase();
+  renderList();
+}
+
+function setCategory(cat) {
+  activeCategory = (activeCategory === cat) ? null : cat;
+  renderPills();
+  renderList();
+}
+
+function renderPills() {
+  const wrap = document.getElementById('pillsWrap');
+  wrap.innerHTML = CATEGORIES.map(cat =>
+    `<button class="pill${activeCategory===cat?' active':''}" onclick="setCategory('${cat}')">${cat.split(' / ')[0].split(' ')[0]}</button>`
+  ).join('');
+}
+
+function renderList() {
+  const filtered = DATA.filter(d => {
+    const matchCat = !activeCategory || d.category === activeCategory;
+    const matchSearch = !searchTerm ||
+      d.complaint.toLowerCase().includes(searchTerm) ||
+      d.category.toLowerCase().includes(searchTerm) ||
+      d.redFlags.some(f => f.text.toLowerCase().includes(searchTerm));
+    return matchCat && matchSearch;
+  });
+
+  const lv = document.getElementById('listView');
+  if (filtered.length === 0) {
+    lv.innerHTML = '<div class="no-results"><span class="empty-icon">🔍</span>No results found</div>';
+    return;
+  }
+
+  lv.innerHTML = filtered.map(d => `
+    <div class="list-item" onclick="showDetail(${d.id})">
+      <div class="list-icon">${d.icon}</div>
+      <div class="list-text">
+        <div class="list-title">${d.complaint}</div>
+        <div class="list-cat">${d.category}</div>
+      </div>
+      <div class="list-count">🚩 ${d.redFlags.length}</div>
+      <div class="list-chevron">›</div>
+    </div>
+  `).join('');
+}
+
+function showDetail(id) {
+  const d = DATA.find(x => x.id === id);
+  const dv = document.getElementById('detailView');
+
+  dv.innerHTML = `
+    <div class="detail-top-bar">
+      <button class="back-btn" onclick="showList()">‹ Back</button>
+      <span class="detail-header-title">${d.icon} ${d.complaint}</span>
+    </div>
+    <div class="detail-content">
+      <div class="stats-row">
+        <span class="stat-chip red">🚩 ${d.redFlags.length} red flags</span>
+        <span class="stat-chip amber">⚠️ ${d.caution.length} cautions</span>
+        <span class="stat-chip green">✔ ${d.actions.length} actions</span>
+      </div>
+
+      <div class="section-label">🚩 Red Flag Symptoms</div>
+      ${d.redFlags.map(f => `
+        <div class="red-flag-item">
+          <div class="dot red"></div>
+          <div class="rf-text">
+            <span class="rf-bold">${f.text}</span>
+            ${f.note ? `<span class="rf-note">→ ${f.note}</span>` : ''}
+          </div>
+        </div>
+      `).join('')}
+
+      <div class="section-label">⚠️ Clinical Cautions</div>
+      ${d.caution.map(c => `
+        <div class="warn-item">
+          <div class="dot amber"></div>
+          <div class="rf-text" style="font-size:13.5px">${c}</div>
+        </div>
+      `).join('')}
+
+      <div class="section-label">✔ Key Immediate Actions</div>
+      ${d.actions.map(a => `
+        <div class="action-box">
+          <span class="action-check">✓</span>
+          <span>${a}</span>
+        </div>
+      `).join('')}
+
+      <div class="disclaimer-box">
+        <strong>Disclaimer:</strong> Clinical reference only. Does not replace clinical judgment, institutional protocols, or specialty consultation. Always evaluate in context of the full clinical picture.
+      </div>
+    </div>
+  `;
+
+  document.getElementById('listView').classList.remove('visible');
+  dv.classList.add('visible');
+  dv.scrollTop = 0;
+}
+
+function showList() {
+  document.getElementById('detailView').classList.remove('visible');
+  document.getElementById('listView').classList.add('visible');
+}
+
+renderPills();
+renderList();
+</script>
+</body>
+</html>
